@@ -23,9 +23,9 @@ pub enum Command {
     /// An email containing a confirmation code will be sent to the address
     /// associated with the credentials.
     RequestPlcOperationSignature {
-        /// An authorization token obtained by invoking the `create_session`
+        /// An access token obtained by invoking the `create_session`
         /// command.
-        auth_token: String,
+        access_token: String,
     },
 }
 

@@ -20,8 +20,8 @@ fn main() {
         Command::CreateSession { args } => {
             do_create_session(&args, &cli.pds);
         }
-        Command::RequestPlcOperationSignature { auth_token } => {
-            do_request_plc_operation_signature(&auth_token, &cli.pds);
+        Command::RequestPlcOperationSignature { access_token } => {
+            do_request_plc_operation_signature(&access_token, &cli.pds);
         }
     };
 }
