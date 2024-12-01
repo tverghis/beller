@@ -1,0 +1,8 @@
+[package]
+name = "beller"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+beller-lib = { path = "../beller-lib"}
+clap = { version = "4", features = ["derive"] }
