@@ -2,16 +2,29 @@
 pub struct BellerCLI {
     /// The command to execute.
     #[command(subcommand)]
-    pub command: Command,
-
-    /// URL of the personal data server.
-    /// This may be specified on any command, if desired.
-    #[arg(short = 's', long, default_value = "https://bsky.social")]
-    pub pds: String,
+    pub command: Commands,
 }
 
 #[derive(Debug, clap::Subcommand)]
-pub enum Command {
+pub enum Commands {
+    /// Commands for interacting with the XRPC API.
+    Api {
+        #[command(subcommand)]
+        commands: ApiCommands,
+
+        /// URL of the personal data server.
+        /// This may be specified on any command, if desired.
+        #[arg(short = 's', long, default_value = "https://bsky.social")]
+        pds: String,
+    },
+
+    /// Cryptography-related commands.
+    #[command(subcommand)]
+    Crypto(CryptoCommands),
+}
+
+#[derive(Debug, clap::Subcommand)]
+pub enum ApiCommands {
     /// Create a session on the PDS.
     CreateSession {
         #[command(flatten)]
@@ -27,7 +40,10 @@ pub enum Command {
         /// command.
         access_token: String,
     },
+}
 
+#[derive(Debug, clap::Subcommand)]
+pub enum CryptoCommands {
     /// Generate a ECDSA private key.
     ///
     /// This command will always generate a key using the secp256k1 (k256)

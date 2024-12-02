@@ -3,7 +3,7 @@ mod cli;
 use atrium_crypto::keypair::{Export, Secp256k1Keypair};
 use beller_lib::XRPC;
 use clap::Parser;
-use cli::{BellerCLI, Command, Credentials};
+use cli::{ApiCommands, BellerCLI, Commands, Credentials, CryptoCommands};
 use rand::rngs::ThreadRng;
 
 impl From<&Credentials> for beller_lib::CreateSession {
@@ -19,13 +19,15 @@ fn main() {
     let cli = BellerCLI::parse();
 
     match cli.command {
-        Command::CreateSession { args } => {
-            do_create_session(&args, &cli.pds);
-        }
-        Command::RequestPlcOperationSignature { access_token } => {
-            do_request_plc_operation_signature(&access_token, &cli.pds);
-        }
-        Command::GeneratePrivateKey => {
+        Commands::Api { commands, pds } => match commands {
+            ApiCommands::CreateSession { args } => {
+                do_create_session(&args, &pds);
+            }
+            ApiCommands::RequestPlcOperationSignature { access_token } => {
+                do_request_plc_operation_signature(&access_token, &pds);
+            }
+        },
+        Commands::Crypto(CryptoCommands::GeneratePrivateKey) => {
             do_generate_private_key();
         }
     };
