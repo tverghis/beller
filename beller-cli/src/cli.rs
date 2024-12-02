@@ -40,6 +40,13 @@ pub enum ApiCommands {
         /// command.
         access_token: String,
     },
+
+    /// Get credentials that should be in the DID document of the account.
+    GetRecommendedDidCredentials {
+        /// An access token obtained by invoking the `create_session`
+        /// command.
+        access_token: String,
+    },
 }
 
 #[derive(Debug, clap::Subcommand)]

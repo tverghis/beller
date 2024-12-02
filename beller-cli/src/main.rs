@@ -26,6 +26,9 @@ fn main() {
             ApiCommands::RequestPlcOperationSignature { access_token } => {
                 do_request_plc_operation_signature(&access_token, &pds);
             }
+            ApiCommands::GetRecommendedDidCredentials { access_token } => {
+                do_get_recommended_did_credentials(&access_token, &pds);
+            }
         },
         Commands::Crypto(CryptoCommands::GeneratePrivateKey) => {
             do_generate_private_key();
@@ -50,6 +53,16 @@ fn do_request_plc_operation_signature(auth_token: &str, pds: &str) {
         Ok(()) => println!("PLC operation signature request submitted. Check associated email for confirmation code."),
         Err(e) => {
             println!("Error requesting PLC operation signature: {e:?}");
+            std::process::exit(1);
+        }
+    }
+}
+
+fn do_get_recommended_did_credentials(access_token: &str, pds: &str) {
+    match beller_lib::GetRecommendedDidCredentials::new(access_token.to_string()).apply(pds) {
+        Ok(res) => println!("{}", serde_json::to_string_pretty(&res).unwrap()),
+        Err(e) => {
+            println!("Error getting recommended DID credentials: {e:?}");
             std::process::exit(1);
         }
     }

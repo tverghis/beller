@@ -41,10 +41,20 @@ The command will return a JSON response containing your session information, inc
 Requests a PLC operation signature, which will trigger an email confirmation:
 
 ```bash
-beller api request-plc-operation-signature --access-token your-access-token
+beller api request-plc-operation-signature <access_token>
 ```
 
 After running this command, check your email for a confirmation code.
+
+#### Get Recommended DID Credentials
+
+Retrieves the recommended DID credentials for a given account:
+
+```bash
+beller api get-recommended-did-credentials <access_token>
+```
+
+The command returns a JSON response containing the recommended DID credentials for the account.
 
 ### Crypto Commands
 
@@ -73,13 +83,7 @@ beller api create-session -u alice.bsky.social -p mypassword --pds https://custo
 beller api create-session -u alice.bsky.social -p mypassword
 ```
 
-3. Request PLC operation signature:
-
-```bash
-beller api request-plc-operation-signature <access_token>
-```
-
-4. Generate a private key:
+3. Generate a private key:
 
 ```bash
 beller crypto generate-private-key

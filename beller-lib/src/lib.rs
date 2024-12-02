@@ -78,3 +78,29 @@ impl XRPC for CreateSession {
             .map_err(ureq::Error::from)
     }
 }
+
+#[derive(Debug, Clone, Serialize)]
+pub struct GetRecommendedDidCredentials {
+    pub auth_token: String,
+}
+
+impl GetRecommendedDidCredentials {
+    #[must_use]
+    pub fn new(auth_token: String) -> Self {
+        Self { auth_token }
+    }
+}
+
+impl XRPC for GetRecommendedDidCredentials {
+    const NSID: &'static str = com::atproto::identity::get_recommended_did_credentials::NSID;
+    type Return = atrium_api::com::atproto::identity::get_recommended_did_credentials::OutputData;
+
+    fn apply(&self, pds: &str) -> XRPCResult<Self::Return> {
+        let url = self.url(pds);
+        ureq::get(&url)
+            .set("Authorization", &format!("Bearer {}", self.auth_token))
+            .call()?
+            .into_json()
+            .map_err(ureq::Error::from)
+    }
+}
