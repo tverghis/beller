@@ -1,9 +1,10 @@
 mod cli;
 
-use atrium_crypto::keypair::{Export, Secp256k1Keypair};
+use atrium_crypto::keypair::{Did, Export, Secp256k1Keypair};
 use beller_lib::XRPC;
 use clap::Parser;
 use cli::{ApiCommands, BellerCLI, Commands, Credentials, CryptoCommands};
+use multibase::Base;
 use rand::rngs::ThreadRng;
 
 impl From<&Credentials> for beller_lib::CreateSession {
@@ -32,6 +33,9 @@ fn main() {
         },
         Commands::Crypto(CryptoCommands::GeneratePrivateKey) => {
             do_generate_private_key();
+        }
+        Commands::Crypto(CryptoCommands::RetrievePublicKey { private_key }) => {
+            do_retrieve_public_key(&private_key);
         }
     };
 }
@@ -73,4 +77,24 @@ fn do_generate_private_key() {
     let exported = keypair.export();
     let encoded = multibase::encode(multibase::Base::Base16Lower, &exported);
     println!("{}", encoded);
+}
+
+fn do_retrieve_public_key(private_key: &str) {
+    match multibase::decode(private_key) {
+        Ok((Base::Base16Lower, decoded)) => match Secp256k1Keypair::import(&decoded) {
+            Ok(keypair) => println!("{}", keypair.did()),
+            Err(e) => {
+                println!("Error importing private key: {e:?}");
+                std::process::exit(1);
+            }
+        },
+        Ok((base, _)) => {
+            println!("Unsupported base for private key: {base:?}");
+            std::process::exit(1);
+        }
+        Err(e) => {
+            println!("Error decoding private key: {e:?}");
+            std::process::exit(1);
+        }
+    }
 }

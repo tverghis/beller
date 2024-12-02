@@ -56,6 +56,15 @@ pub enum CryptoCommands {
     /// This command will always generate a key using the secp256k1 (k256)
     /// curve. The output is a base16-encoded string of the private key bytes.
     GeneratePrivateKey,
+
+    /// Derive a public key from a private key.
+    ///
+    /// The public key will be encoded according to this specification:
+    /// https://atproto.com/specs/cryptography#public-key-encoding.
+    RetrievePublicKey {
+        /// base16-encoded string of the private key bytes
+        private_key: String,
+    },
 }
 
 #[derive(Debug, Clone, clap::Args)]
