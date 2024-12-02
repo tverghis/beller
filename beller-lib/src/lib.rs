@@ -68,7 +68,7 @@ impl CreateSession {
 
 impl XRPC for CreateSession {
     const NSID: &'static str = com::atproto::server::create_session::NSID;
-    type Return = atrium_api::com::atproto::server::create_session::OutputData;
+    type Return = com::atproto::server::create_session::OutputData;
 
     fn apply(&self, pds: &str) -> XRPCResult<Self::Return> {
         let url = self.url(pds);
@@ -93,13 +93,35 @@ impl GetRecommendedDidCredentials {
 
 impl XRPC for GetRecommendedDidCredentials {
     const NSID: &'static str = com::atproto::identity::get_recommended_did_credentials::NSID;
-    type Return = atrium_api::com::atproto::identity::get_recommended_did_credentials::OutputData;
+    type Return = com::atproto::identity::get_recommended_did_credentials::OutputData;
 
     fn apply(&self, pds: &str) -> XRPCResult<Self::Return> {
         let url = self.url(pds);
         ureq::get(&url)
             .set("Authorization", &format!("Bearer {}", self.auth_token))
             .call()?
+            .into_json()
+            .map_err(ureq::Error::from)
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct SignPlcOperation {
+    pub auth_token: String,
+    pub input: com::atproto::identity::sign_plc_operation::InputData,
+}
+
+impl XRPC for SignPlcOperation {
+    const NSID: &'static str = com::atproto::identity::sign_plc_operation::NSID;
+    type Return = com::atproto::identity::sign_plc_operation::OutputData;
+
+    fn apply(&self, pds: &str) -> XRPCResult<Self::Return> {
+        let url = self.url(pds);
+        let input = com::atproto::identity::sign_plc_operation::Input::from(self.input.clone());
+
+        ureq::post(&url)
+            .set("Authorization", &format!("Bearer {}", self.auth_token))
+            .send_json(input)?
             .into_json()
             .map_err(ureq::Error::from)
     }
