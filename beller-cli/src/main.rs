@@ -46,7 +46,7 @@ fn do_create_session(args: &Credentials, pds: &str) {
             println!("{}", serde_json::to_string_pretty(&res).unwrap());
         }
         Err(e) => {
-            println!("Error creating session: {e:?}");
+            eprintln!("Error creating session: {e:?}");
             std::process::exit(1);
         }
     }
@@ -56,7 +56,7 @@ fn do_request_plc_operation_signature(auth_token: &str, pds: &str) {
     match beller_lib::RequestPlcOperationSignature::new(auth_token.to_string()).apply(pds) {
         Ok(()) => println!("PLC operation signature request submitted. Check associated email for confirmation code."),
         Err(e) => {
-            println!("Error requesting PLC operation signature: {e:?}");
+            eprintln!("Error requesting PLC operation signature: {e:?}");
             std::process::exit(1);
         }
     }
@@ -66,7 +66,7 @@ fn do_get_recommended_did_credentials(access_token: &str, pds: &str) {
     match beller_lib::GetRecommendedDidCredentials::new(access_token.to_string()).apply(pds) {
         Ok(res) => println!("{}", serde_json::to_string_pretty(&res).unwrap()),
         Err(e) => {
-            println!("Error getting recommended DID credentials: {e:?}");
+            eprintln!("Error getting recommended DID credentials: {e:?}");
             std::process::exit(1);
         }
     }
@@ -84,16 +84,16 @@ fn do_retrieve_public_key(private_key: &str) {
         Ok((Base::Base16Lower, decoded)) => match Secp256k1Keypair::import(&decoded) {
             Ok(keypair) => println!("{}", keypair.did()),
             Err(e) => {
-                println!("Error importing private key: {e:?}");
+                eprintln!("Error importing private key: {e:?}");
                 std::process::exit(1);
             }
         },
         Ok((base, _)) => {
-            println!("Unsupported base for private key: {base:?}");
+            eprintln!("Unsupported base for private key: {base:?}");
             std::process::exit(1);
         }
         Err(e) => {
-            println!("Error decoding private key: {e:?}");
+            eprintln!("Error decoding private key: {e:?}");
             std::process::exit(1);
         }
     }
