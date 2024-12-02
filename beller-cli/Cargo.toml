@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-beller-lib = { path = "../beller-lib"}
+atrium-crypto = "0.1"
+beller-lib = { path = "../beller-lib" }
 clap = { version = "4", features = ["derive"] }
+multibase = "0.9"
+rand = "0.8"
 serde_json = "1"

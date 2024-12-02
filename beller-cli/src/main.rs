@@ -1,8 +1,10 @@
 mod cli;
 
+use atrium_crypto::keypair::{Export, Secp256k1Keypair};
 use beller_lib::XRPC;
 use clap::Parser;
 use cli::{BellerCLI, Command, Credentials};
+use rand::rngs::ThreadRng;
 
 impl From<&Credentials> for beller_lib::CreateSession {
     fn from(args: &Credentials) -> Self {
@@ -22,6 +24,9 @@ fn main() {
         }
         Command::RequestPlcOperationSignature { access_token } => {
             do_request_plc_operation_signature(&access_token, &cli.pds);
+        }
+        Command::GeneratePrivateKey => {
+            do_generate_private_key();
         }
     };
 }
@@ -46,4 +51,11 @@ fn do_request_plc_operation_signature(auth_token: &str, pds: &str) {
             std::process::exit(1);
         }
     }
+}
+
+fn do_generate_private_key() {
+    let keypair = Secp256k1Keypair::create(&mut ThreadRng::default());
+    let exported = keypair.export();
+    let encoded = multibase::encode(multibase::Base::Base16Lower, &exported);
+    println!("{}", encoded);
 }

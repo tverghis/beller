@@ -27,6 +27,12 @@ pub enum Command {
         /// command.
         access_token: String,
     },
+
+    /// Generate a ECDSA private key.
+    ///
+    /// This command will always generate a key using the secp256k1 (k256)
+    /// curve. The output is a base16-encoded string of the private key bytes.
+    GeneratePrivateKey,
 }
 
 #[derive(Debug, Clone, clap::Args)]
