@@ -5,6 +5,10 @@ A command-line interface for interacting with ATProto/Bluesky Personal Data Serv
 > [!NOTE]
 > Currently, the implemented commands focus on operations required to set up a labeler service. Other operations may be added in the future. Contributions are welcome!
 
+> [!WARNING]
+> This software is currently under heavy development. Not all commands have been implemented, and the ones that have will likely change.
+> See [TODO](TODO.md) for more details.
+
 ## Installation
 
 To install from source:
