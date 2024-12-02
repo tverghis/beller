@@ -75,8 +75,8 @@ fn do_get_recommended_did_credentials(access_token: &str, pds: &str) {
 fn do_generate_private_key() {
     let keypair = Secp256k1Keypair::create(&mut ThreadRng::default());
     let exported = keypair.export();
-    let encoded = multibase::encode(multibase::Base::Base16Lower, &exported);
-    println!("{}", encoded);
+    let encoded = multibase::encode(multibase::Base::Base16Lower, exported);
+    println!("{encoded}");
 }
 
 fn do_retrieve_public_key(private_key: &str) {

@@ -60,7 +60,7 @@ pub enum CryptoCommands {
     /// Derive a public key from a private key.
     ///
     /// The public key will be encoded according to this specification:
-    /// https://atproto.com/specs/cryptography#public-key-encoding.
+    /// <https://atproto.com/specs/cryptography#public-key-encoding>.
     RetrievePublicKey {
         /// base16-encoded string of the private key bytes
         private_key: String,
