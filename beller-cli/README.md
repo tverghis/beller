@@ -76,7 +76,7 @@ beller api create-session -u alice.bsky.social -p mypassword
 3. Request PLC operation signature:
 
 ```bash
-beller api request-plc-operation-signature --access-token "jwt_token_from_create_session"
+beller api request-plc-operation-signature <access_token>
 ```
 
 4. Generate a private key:
