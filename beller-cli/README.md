@@ -15,50 +15,74 @@ cargo install --path .
 
 ## Usage
 
-The CLI supports the following commands:
+The CLI organizes commands into the following groups:
 
-### Create Session
+- `api`: Commands for interacting with the XRPC API
+- `crypto`: Cryptography-related commands
+
+### API Commands
+
+> [!NOTE]
+> API commands may specify a PDS URL. If not specified, Bluesky's PDS
+> (`https://bsky.social`) will be used.
+
+#### Create Session
 
 Creates a new session on the PDS using your credentials:
 
 ```bash
-beller create-session -u your-handle-or-did -p your-password
+beller api create-session -u your-handle-or-did -p your-password
 ```
 
 The command will return a JSON response containing your session information, including the access token.
 
-### Request PLC Operation Signature
+#### Request PLC Operation Signature
 
 Requests a PLC operation signature, which will trigger an email confirmation:
 
 ```bash
-beller request-plc-operation-signature --access-token your-access-token
+beller api request-plc-operation-signature --access-token your-access-token
 ```
 
 After running this command, check your email for a confirmation code.
 
-### Global Options
+### Crypto Commands
 
-- `-s, --pds <URL>`: Specify the PDS URL (defaults to https://bsky.social)
+#### Generate Private Key
+
+Generates an ECDSA private key using the secp256k1 curve:
+
+```bash
+beller crypto generate-private-key
+```
+
+The command outputs a base16-encoded string of the private key bytes.
+
 
 ## Examples
 
 1. Create a session with custom PDS:
 
 ```bash
-beller create-session -u alice.bsky.social -p mypassword --pds https://custom-pds.example.com
+beller api create-session -u alice.bsky.social -p mypassword --pds https://custom-pds.example.com
 ```
 
 2. Create a session with default PDS:
 
 ```bash
-beller create-session -u alice.bsky.social -p mypassword
+beller api create-session -u alice.bsky.social -p mypassword
 ```
 
 3. Request PLC operation signature:
 
 ```bash
-beller request-plc-operation-signature --access-token "jwt_token_from_create_session"
+beller api request-plc-operation-signature --access-token "jwt_token_from_create_session"
+```
+
+4. Generate a private key:
+
+```bash
+beller crypto generate-private-key
 ```
 
 ## Error Handling
