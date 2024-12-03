@@ -193,9 +193,11 @@ name = "beller"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "atrium-api",
  "atrium-crypto",
  "beller-lib",
  "clap",
+ "ipld-core",
  "multibase",
  "rand",
  "serde_json",
