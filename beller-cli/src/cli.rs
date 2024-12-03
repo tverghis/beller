@@ -21,6 +21,17 @@ pub enum Commands {
     /// Cryptography-related commands.
     #[command(subcommand)]
     Crypto(CryptoCommands),
+
+    /// Commands related to managing a labeler service.
+    Labeler {
+        #[command(subcommand)]
+        commands: LabelerCommands,
+
+        /// URL of the personal data server.
+        /// This may be specified on any command, if desired.
+        #[arg(short = 's', long, default_value = "https://bsky.social")]
+        pds: String,
+    },
 }
 
 #[derive(Debug, clap::Subcommand)]
@@ -33,7 +44,7 @@ pub enum ApiCommands {
 
     /// Request a PLC operation signature.
     ///
-    /// An email containing a confirmation code will be sent to the address
+    /// An email containing a signing token will be sent to the address
     /// associated with the credentials.
     RequestPlcOperationSignature {
         /// An access token obtained by invoking the `create_session`
@@ -63,6 +74,28 @@ pub enum CryptoCommands {
     /// <https://atproto.com/specs/cryptography#public-key-encoding>.
     RetrievePublicKey {
         /// base16-encoded string of the private key bytes
+        private_key: String,
+    },
+}
+
+#[derive(Debug, clap::Subcommand)]
+pub enum LabelerCommands {
+    /// Setup a new labeler service.
+    Setup {
+        /// Access token representing a DID's session on the server.
+        /// One can be obtained by performing the `create-session` operation.
+        #[arg(short = 't', long)]
+        access_token: String,
+        /// Signing token received upon performing a `request-plc-operation-signature` operation.
+        #[arg(short = 's', long)]
+        signing_token: String,
+        /// The URL at which the labeler service will be hosted.
+        /// It should be a valid, accessible, HTTPS endpoint.
+        #[arg(short = 'l', long)]
+        labeler_url: String,
+        /// A secp256k1 (k256) ECDSA private key.
+        /// One may be generated using the `generate-private-key` command.
+        #[arg(short = 'k', long)]
         private_key: String,
     },
 }
