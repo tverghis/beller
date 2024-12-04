@@ -2,13 +2,11 @@ mod cli;
 mod crypto;
 
 use atrium_api::types::{DataModel, Unknown};
-use atrium_crypto::keypair::{Export, Secp256k1Keypair};
 use beller_lib::XRPC;
 use clap::Parser;
 use cli::{ApiCommands, BellerCLI, Commands, Credentials, CryptoCommands, LabelerCommands};
-use crypto::retrieve_public_key;
+use crypto::{generate_private_key, retrieve_public_key};
 use ipld_core::ipld::Ipld;
-use rand::rngs::ThreadRng;
 
 impl From<&Credentials> for beller_lib::CreateSession {
     fn from(args: &Credentials) -> Self {
@@ -89,12 +87,8 @@ fn do_get_recommended_did_credentials(access_token: &str, pds: &str) {
     }
 }
 
-// TODO: move internals to crypto module
 fn do_generate_private_key() {
-    let keypair = Secp256k1Keypair::create(&mut ThreadRng::default());
-    let exported = keypair.export();
-    let encoded = multibase::encode(multibase::Base::Base16Lower, exported);
-    println!("{encoded}");
+    println!("{}", generate_private_key());
 }
 
 fn do_retrieve_public_key(private_key: &str) {
