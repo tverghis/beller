@@ -1,7 +1,10 @@
 mod cli;
 mod crypto;
 
-use atrium_api::types::{DataModel, Unknown};
+use atrium_api::{
+    com::atproto::identity::sign_plc_operation,
+    types::{DataModel, Unknown},
+};
 use beller_lib::XRPC;
 use clap::Parser;
 use cli::{ApiCommands, BellerCLI, Commands, Credentials, CryptoCommands, LabelerCommands};
@@ -164,5 +167,35 @@ fn do_setup_labeler(
         }
     }
 
-    dbg!(did_creds);
+    let sign_op_input = sign_plc_operation::InputData {
+        also_known_as: did_creds.also_known_as,
+        rotation_keys: did_creds.rotation_keys,
+        services: did_creds.services,
+        token: Some(signing_token.to_string()),
+        verification_methods: did_creds.verification_methods,
+    };
+
+    match beller_lib::SignPlcOperation::new(access_token.to_string(), sign_op_input).apply(pds) {
+        Ok(res) => println!("{}", serde_json::to_string_pretty(&res).unwrap()),
+        Err(e) => {
+            match e.into_response() {
+                Some(resp) => {
+                    eprintln!(
+                        "Failed to perform `{}`: {}",
+                        beller_lib::SignPlcOperation::NSID,
+                        // It doesn't look like atrium-api's `Error` enum is fully implemented, so we
+                        // directly access the response body here.
+                        resp.into_json::<serde_json::Value>()
+                            .unwrap()
+                            .get("message")
+                            .unwrap()
+                    );
+                }
+                None => {
+                    eprintln!("Failed to perform `{}`", beller_lib::SignPlcOperation::NSID);
+                }
+            }
+            std::process::exit(1);
+        }
+    }
 }

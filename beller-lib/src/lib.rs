@@ -111,6 +111,16 @@ pub struct SignPlcOperation {
     pub input: com::atproto::identity::sign_plc_operation::InputData,
 }
 
+impl SignPlcOperation {
+    #[must_use]
+    pub fn new(
+        auth_token: String,
+        input: com::atproto::identity::sign_plc_operation::InputData,
+    ) -> Self {
+        Self { auth_token, input }
+    }
+}
+
 impl XRPC for SignPlcOperation {
     const NSID: &'static str = com::atproto::identity::sign_plc_operation::NSID;
     type Return = com::atproto::identity::sign_plc_operation::OutputData;
