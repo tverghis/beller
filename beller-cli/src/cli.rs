@@ -87,7 +87,7 @@ pub enum LabelerCommands {
         #[arg(short = 't', long)]
         access_token: String,
         /// Signing token received upon performing a `request-plc-operation-signature` operation.
-        #[arg(short = 's', long)]
+        #[arg(short = 'g', long)]
         signing_token: String,
         /// The URL at which the labeler service will be hosted.
         /// It should be a valid, accessible, HTTPS endpoint.
