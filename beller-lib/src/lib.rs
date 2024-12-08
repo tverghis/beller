@@ -136,3 +136,33 @@ impl XRPC for SignPlcOperation {
             .map_err(ureq::Error::from)
     }
 }
+
+#[derive(Debug, Clone, Serialize)]
+pub struct SubmitPlcOperation {
+    pub auth_token: String,
+    pub input: com::atproto::identity::submit_plc_operation::InputData,
+}
+
+impl SubmitPlcOperation {
+    #[must_use]
+    pub fn new(
+        auth_token: String,
+        input: com::atproto::identity::submit_plc_operation::InputData,
+    ) -> Self {
+        Self { auth_token, input }
+    }
+}
+
+impl XRPC for SubmitPlcOperation {
+    const NSID: &'static str = com::atproto::identity::submit_plc_operation::NSID;
+    type Return = ();
+
+    fn apply(&self, pds: &str) -> XRPCResult<Self::Return> {
+        let url = self.url(pds);
+        ureq::post(&url)
+            .set("Authorization", &format!("Bearer {}", self.auth_token))
+            .send_json(&self.input)?;
+
+        Ok(())
+    }
+}
