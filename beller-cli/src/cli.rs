@@ -36,6 +36,12 @@ pub enum Commands {
 
 #[derive(Debug, clap::Subcommand)]
 pub enum ApiCommands {
+    /// Describe a repository.
+    DescribeRepo {
+        /// DID of the repository to describe.
+        did: String,
+    },
+
     /// Create a session on the PDS.
     CreateSession {
         #[command(flatten)]
