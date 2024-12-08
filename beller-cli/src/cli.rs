@@ -48,6 +48,13 @@ pub enum ApiCommands {
         args: Credentials,
     },
 
+    /// Get the session information for the current auth session.
+    GetSession {
+        /// An access token obtained by invoking the `create_session`
+        /// command.
+        access_token: String,
+    },
+
     /// Request a PLC operation signature.
     ///
     /// An email containing a signing token will be sent to the address

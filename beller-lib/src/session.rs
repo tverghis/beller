@@ -31,3 +31,29 @@ impl XRPC for CreateSession {
             .map_err(ureq::Error::from)
     }
 }
+
+#[derive(Debug, Clone, Serialize)]
+pub struct GetSession {
+    pub auth_token: String,
+}
+
+impl GetSession {
+    #[must_use]
+    pub fn new(auth_token: String) -> Self {
+        Self { auth_token }
+    }
+}
+
+impl XRPC for GetSession {
+    const NSID: &'static str = com::atproto::server::get_session::NSID;
+    type Return = com::atproto::server::get_session::OutputData;
+
+    fn apply(&self, pds: &str) -> XRPCResult<Self::Return> {
+        let url = self.url(pds);
+        ureq::get(&url)
+            .set("Authorization", &format!("Bearer {}", self.auth_token))
+            .call()?
+            .into_json()
+            .map_err(ureq::Error::from)
+    }
+}
