@@ -2,17 +2,8 @@ mod cli;
 mod impls;
 
 use clap::Parser;
-use cli::{ApiCommands, BellerCLI, Commands, Credentials, CryptoCommands, LabelerCommands};
+use cli::{ApiCommands, BellerCLI, Commands, CryptoCommands, LabelerCommands};
 use impls::{crypto, did, plc, repo, session};
-
-impl From<&Credentials> for beller_lib::CreateSession {
-    fn from(args: &Credentials) -> Self {
-        Self {
-            identifier: args.identifier.clone(),
-            password: args.password.clone(),
-        }
-    }
-}
 
 fn main() {
     let cli = BellerCLI::parse();

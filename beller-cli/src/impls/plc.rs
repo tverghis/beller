@@ -15,7 +15,7 @@ pub fn request_operation_signing_token(access_token: &str, pds: &str) {
 pub fn submit_signed_operation(
     access_token: &str,
     signing_token: &str,
-    did_creds: super::api::did::DidCreds,
+    did_creds: super::api::did::RecommendedCredentials,
     pds: &str,
 ) {
     let res = plc::sign_operation(access_token, signing_token, did_creds, pds);

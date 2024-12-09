@@ -1,12 +1,8 @@
-mod identity;
-mod repo;
-mod session;
+pub mod identity;
+pub mod repo;
+pub mod session;
 
 use serde::{de::DeserializeOwned, Serialize};
-
-pub use identity::*;
-pub use repo::*;
-pub use session::*;
 
 pub type XRPCResult<T> = Result<T, ureq::Error>;
 

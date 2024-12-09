@@ -7,5 +7,5 @@ pub fn describe_did(did: &str, pds: &str) {
 /// Prints details about the repository for the `did` in the session associated with the `access_token`.
 pub fn describe_session(access_token: &str, pds: &str) {
     let session = super::api::session::get(access_token, pds);
-    describe_did(&session.did.to_string(), pds);
+    describe_did(&session.did, pds);
 }

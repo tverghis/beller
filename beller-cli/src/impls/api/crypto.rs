@@ -19,7 +19,7 @@ pub fn retrieve_public_key(private_key: &str) -> String {
         Ok((ENC_BASE, decoded)) => Secp256k1Keypair::import(&decoded)
             .expect("could not import private key")
             .did(),
-        Ok((base, _)) => panic!("unsupported base {:?} for private key", base),
-        Err(e) => panic!("failed to import private key: {:?}", e),
+        Ok((base, _)) => panic!("unsupported base {base:?} for private key"),
+        Err(e) => panic!("failed to import private key: {e:?}"),
     }
 }

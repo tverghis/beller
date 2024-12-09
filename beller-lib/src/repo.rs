@@ -4,18 +4,18 @@ use serde::Serialize;
 use crate::{XRPCResult, XRPC};
 
 #[derive(Debug, Clone, Serialize)]
-pub struct DescribeRepo {
+pub struct Describe {
     pub did: String,
 }
 
-impl DescribeRepo {
+impl Describe {
     #[must_use]
     pub fn new(did: String) -> Self {
         Self { did }
     }
 }
 
-impl XRPC for DescribeRepo {
+impl XRPC for Describe {
     const NSID: &'static str = com::atproto::repo::describe_repo::NSID;
     type Return = com::atproto::repo::describe_repo::OutputData;
 

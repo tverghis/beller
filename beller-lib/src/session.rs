@@ -4,12 +4,12 @@ use serde::Serialize;
 use crate::{XRPCResult, XRPC};
 
 #[derive(Debug, Clone, Serialize)]
-pub struct CreateSession {
+pub struct Create {
     pub identifier: String,
     pub password: String,
 }
 
-impl CreateSession {
+impl Create {
     #[must_use]
     pub fn new(identifier: String, password: String) -> Self {
         Self {
@@ -19,7 +19,7 @@ impl CreateSession {
     }
 }
 
-impl XRPC for CreateSession {
+impl XRPC for Create {
     const NSID: &'static str = com::atproto::server::create_session::NSID;
     type Return = com::atproto::server::create_session::OutputData;
 
@@ -33,18 +33,18 @@ impl XRPC for CreateSession {
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub struct GetSession {
+pub struct Get {
     pub auth_token: String,
 }
 
-impl GetSession {
+impl Get {
     #[must_use]
     pub fn new(auth_token: String) -> Self {
         Self { auth_token }
     }
 }
 
-impl XRPC for GetSession {
+impl XRPC for Get {
     const NSID: &'static str = com::atproto::server::get_session::NSID;
     type Return = com::atproto::server::get_session::OutputData;
 
