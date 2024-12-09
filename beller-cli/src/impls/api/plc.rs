@@ -14,7 +14,7 @@ pub fn request_operation_signing_token(access_token: &str, pds: &str) {
 /// Signs a PLC operation.
 ///
 /// TODO: this currently explicitly takes a `super::did::DidCreds` as the input data
-/// for the operation, but it should really take an `Unkown`.
+/// for the operation, but it should really take an `Unknown`.
 pub fn sign_operation(
     access_token: &str,
     signing_token: &str,
