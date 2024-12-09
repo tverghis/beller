@@ -1,11 +1,8 @@
 mod cli;
 mod crypto;
+mod impls;
 
-use atrium_api::{
-    com::atproto::identity::sign_plc_operation,
-    types::{DataModel, Unknown},
-};
-use beller_lib::XRPC;
+use atrium_api::types::{DataModel, Unknown};
 use clap::Parser;
 use cli::{ApiCommands, BellerCLI, Commands, Credentials, CryptoCommands, LabelerCommands};
 use crypto::{generate_private_key, retrieve_public_key};
@@ -25,18 +22,23 @@ fn main() {
 
     match cli.command {
         Commands::Api { commands, pds } => match commands {
+            ApiCommands::DescribeRepo { did } => impls::repo::describe(&did, &pds),
             ApiCommands::CreateSession { args } => {
-                do_create_session(&args, &pds);
+                impls::session::create(&args, &pds);
+            }
+            ApiCommands::GetSession { access_token } => {
+                impls::session::get(&access_token, &pds);
             }
             ApiCommands::RequestPlcOperationSignature { access_token } => {
-                do_request_plc_operation_signature(&access_token, &pds);
+                impls::plc::request_operation_signing_token(&access_token, &pds);
             }
             ApiCommands::GetRecommendedDidCredentials { access_token } => {
-                do_get_recommended_did_credentials(&access_token, &pds);
+                let creds = impls::did::get_recommended_credentials(&access_token, &pds);
+                println!("{}", serde_json::to_string_pretty(&creds).unwrap());
             }
         },
         Commands::Crypto(CryptoCommands::GeneratePrivateKey) => {
-            do_generate_private_key();
+            println!("{}", generate_private_key());
         }
         Commands::Crypto(CryptoCommands::RetrievePublicKey { private_key }) => {
             do_retrieve_public_key(&private_key);
@@ -56,42 +58,6 @@ fn main() {
             ),
         },
     };
-}
-
-fn do_create_session(args: &Credentials, pds: &str) {
-    match beller_lib::CreateSession::from(args).apply(pds) {
-        Ok(res) => {
-            println!("{}", serde_json::to_string_pretty(&res).unwrap());
-        }
-        Err(e) => {
-            eprintln!("Error creating session: {e:?}");
-            std::process::exit(1);
-        }
-    }
-}
-
-fn do_request_plc_operation_signature(auth_token: &str, pds: &str) {
-    match beller_lib::RequestPlcOperationSignature::new(auth_token.to_string()).apply(pds) {
-        Ok(()) => println!("PLC operation signature request submitted. Check associated email for confirmation code."),
-        Err(e) => {
-            eprintln!("Error requesting PLC operation signature: {e:?}");
-            std::process::exit(1);
-        }
-    }
-}
-
-fn do_get_recommended_did_credentials(access_token: &str, pds: &str) {
-    match beller_lib::GetRecommendedDidCredentials::new(access_token.to_string()).apply(pds) {
-        Ok(res) => println!("{}", serde_json::to_string_pretty(&res).unwrap()),
-        Err(e) => {
-            eprintln!("Error getting recommended DID credentials: {e:?}");
-            std::process::exit(1);
-        }
-    }
-}
-
-fn do_generate_private_key() {
-    println!("{}", generate_private_key());
 }
 
 fn do_retrieve_public_key(private_key: &str) {
@@ -119,16 +85,7 @@ fn do_setup_labeler(
     let pub_key = DataModel::try_from(Ipld::String(pub_key))
         .expect("could not construct IPLD String for pub_key");
 
-    let Ok(mut did_creds) =
-        beller_lib::GetRecommendedDidCredentials::new(access_token.into()).apply(pds)
-    else {
-        eprintln!(
-            "Failed to perform `{}`",
-            beller_lib::GetRecommendedDidCredentials::NSID
-        );
-        std::process::exit(1);
-    };
-
+    let mut did_creds = impls::did::get_recommended_credentials(access_token, pds);
     match &mut did_creds.verification_methods {
         None => {
             let map = Unknown::Object([("atproto_label".to_string(), pub_key)].into());
@@ -167,35 +124,8 @@ fn do_setup_labeler(
         }
     }
 
-    let sign_op_input = sign_plc_operation::InputData {
-        also_known_as: did_creds.also_known_as,
-        rotation_keys: did_creds.rotation_keys,
-        services: did_creds.services,
-        token: Some(signing_token.to_string()),
-        verification_methods: did_creds.verification_methods,
-    };
+    impls::plc::submit_signed_operation(access_token, signing_token, did_creds, pds);
 
-    match beller_lib::SignPlcOperation::new(access_token.to_string(), sign_op_input).apply(pds) {
-        Ok(res) => println!("{}", serde_json::to_string_pretty(&res).unwrap()),
-        Err(e) => {
-            match e.into_response() {
-                Some(resp) => {
-                    eprintln!(
-                        "Failed to perform `{}`: {}",
-                        beller_lib::SignPlcOperation::NSID,
-                        // It doesn't look like atrium-api's `Error` enum is fully implemented, so we
-                        // directly access the response body here.
-                        resp.into_json::<serde_json::Value>()
-                            .unwrap()
-                            .get("message")
-                            .unwrap()
-                    );
-                }
-                None => {
-                    eprintln!("Failed to perform `{}`", beller_lib::SignPlcOperation::NSID);
-                }
-            }
-            std::process::exit(1);
-        }
-    }
+    eprintln!("Labeler setup complete.");
+    impls::did::get_for_session(access_token, pds);
 }
