@@ -5,6 +5,7 @@
 mod api;
 
 pub mod did;
+pub mod labeler;
 pub mod plc;
 pub mod repo;
 pub mod session;
