@@ -12,8 +12,7 @@ pub fn setup(
     pds: &str,
 ) {
     let Ok(pub_key) = retrieve_public_key(private_key) else {
-        eprintln!("Failed to retrieve public key from the provided private key.");
-        std::process::exit(1);
+        panic!("Failed to retrieve public key from the provided private key.");
     };
 
     let pub_key = DataModel::try_from(Ipld::String(pub_key))
@@ -29,10 +28,9 @@ pub fn setup(
             m.entry("atproto_label".to_string()).or_insert(pub_key);
         }
         _ => {
-            eprintln!("Unexpected type for verification_methods");
-            std::process::exit(1);
+            panic!("Unexpected type for verification_methods");
         }
-    }
+    };
 
     let lbl_svc_map = [
         ("type".to_string(), Ipld::String("AtprotoLabeler".into())),
@@ -53,10 +51,9 @@ pub fn setup(
                 .or_insert(lbl_svc_map);
         }
         _ => {
-            eprintln!("Unexpected type for services");
-            std::process::exit(1);
+            panic!("Unexpected type for services");
         }
-    }
+    };
 
     super::plc::submit_signed_operation(access_token, signing_token, did_creds, pds);
 

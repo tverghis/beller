@@ -58,11 +58,6 @@ fn main() {
 }
 
 fn do_retrieve_public_key(private_key: &str) {
-    match retrieve_public_key(private_key) {
-        Ok(key) => println!("{key}"),
-        Err(e) => {
-            eprintln!("{e}");
-            std::process::exit(1);
-        }
-    }
+    let key = retrieve_public_key(private_key).expect("could not retrieve public key");
+    println!("{key}");
 }
