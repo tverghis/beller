@@ -22,7 +22,7 @@ fn main() {
 
     match cli.command {
         Commands::Api { commands, pds } => match commands {
-            ApiCommands::DescribeRepo { did } => impls::repo::describe(&did, &pds),
+            ApiCommands::DescribeRepo { did } => impls::repo::describe_did(&did, &pds),
             ApiCommands::CreateSession { args } => {
                 impls::session::create(&args, &pds);
             }
@@ -127,5 +127,5 @@ fn do_setup_labeler(
     impls::plc::submit_signed_operation(access_token, signing_token, did_creds, pds);
 
     eprintln!("Labeler setup complete.");
-    impls::did::get_for_session(access_token, pds);
+    impls::repo::describe_session(access_token, pds);
 }
