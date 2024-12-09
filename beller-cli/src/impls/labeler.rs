@@ -1,7 +1,7 @@
 use atrium_api::types::{DataModel, Unknown};
 use ipld_core::ipld::Ipld;
 
-use crate::crypto::retrieve_public_key;
+use crate::impls::api::crypto::retrieve_public_key;
 
 /// Sets up the DID associated with the `access_token` to be a labeler service on the PDS.
 pub fn setup(
@@ -11,9 +11,7 @@ pub fn setup(
     private_key: &str,
     pds: &str,
 ) {
-    let Ok(pub_key) = retrieve_public_key(private_key) else {
-        panic!("Failed to retrieve public key from the provided private key.");
-    };
+    let pub_key = retrieve_public_key(private_key);
 
     let pub_key = DataModel::try_from(Ipld::String(pub_key))
         .expect("could not construct IPLD String for pub_key");
