@@ -1,4 +1,5 @@
 use atrium_api::types::{DataModel, Unknown};
+use atrium_crypto::Algorithm;
 use ipld_core::ipld::Ipld;
 
 use crate::impls::api::crypto::retrieve_public_key;
@@ -11,7 +12,7 @@ pub fn setup(
     private_key: &str,
     pds: &str,
 ) {
-    let pub_key = retrieve_public_key(private_key);
+    let pub_key = retrieve_public_key(private_key, Algorithm::Secp256k1);
 
     let pub_key = DataModel::try_from(Ipld::String(pub_key))
         .expect("could not construct IPLD String for pub_key");
