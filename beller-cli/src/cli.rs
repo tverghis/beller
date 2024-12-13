@@ -1,3 +1,5 @@
+use crate::impls::crypto::CurveAlgorithm;
+
 #[derive(Debug, clap::Parser)]
 pub struct BellerCLI {
     /// The command to execute.
@@ -77,9 +79,12 @@ pub enum ApiCommands {
 pub enum CryptoCommands {
     /// Generate a ECDSA private key.
     ///
-    /// This command will always generate a key using the secp256k1 (k256)
-    /// curve. The output is a base16-encoded string of the private key bytes.
-    GeneratePrivateKey,
+    /// The output is a base16-encoded string of the private key bytes.
+    GeneratePrivateKey {
+        /// Curve algorithm to use to generate the private key.
+        #[arg(value_enum, short = 'a', long, default_value_t)]
+        alg: CurveAlgorithm,
+    },
 
     /// Derive a public key from a private key.
     ///
@@ -88,6 +93,9 @@ pub enum CryptoCommands {
     RetrievePublicKey {
         /// base16-encoded string of the private key bytes
         private_key: String,
+        /// Curve algorithm that was used to generate the private key
+        #[arg(value_enum, short = 'a', long, default_value_t)]
+        alg: CurveAlgorithm,
     },
 }
 

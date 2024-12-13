@@ -1,8 +1,7 @@
 use atrium_api::types::{DataModel, Unknown};
-use atrium_crypto::Algorithm;
 use ipld_core::ipld::Ipld;
 
-use crate::impls::api::crypto::retrieve_public_key;
+use crate::impls::api::crypto::{retrieve_public_key, CurveAlgorithm};
 
 /// Sets up the DID associated with the `access_token` to be a labeler service on the PDS.
 pub fn setup(
@@ -12,7 +11,8 @@ pub fn setup(
     private_key: &str,
     pds: &str,
 ) {
-    let pub_key = retrieve_public_key(private_key, Algorithm::Secp256k1);
+    // TODO: allow passing in CurveAlgorithm during setup
+    let pub_key = retrieve_public_key(private_key, CurveAlgorithm::default());
 
     let pub_key = DataModel::try_from(Ipld::String(pub_key))
         .expect("could not construct IPLD String for pub_key");

@@ -23,8 +23,10 @@ pub fn api_commands(commands: ApiCommands, pds: &str) {
 
 pub fn crypto_commands(commands: CryptoCommands) {
     match commands {
-        CryptoCommands::GeneratePrivateKey => crypto::print_private_key(),
-        CryptoCommands::RetrievePublicKey { private_key } => crypto::print_public_key(&private_key),
+        CryptoCommands::GeneratePrivateKey { alg } => crypto::print_private_key(alg),
+        CryptoCommands::RetrievePublicKey { private_key, alg } => {
+            crypto::print_public_key(&private_key, alg);
+        }
     }
 }
 
