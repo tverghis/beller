@@ -7,6 +7,7 @@ These are meant to represent the "big rocks" that need to be tackled before a "1
 These items are listed in no particular order.
 
 - [ ] Add an "interactive" mode where the user is prompted for each required value
-- [ ] Support `p256` curve when generating private keys
+- [x] Support `p256` curve when generating private keys
 - [ ] Support using refresh tokens where possible
 - [ ] Support setting the PDS in a config file so it does not have to be repeated for every command
+- [ ] Support PEM format for generating/loading keys?
