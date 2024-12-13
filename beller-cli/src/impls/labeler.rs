@@ -12,7 +12,6 @@ pub fn setup(
     key_alg: CurveAlgorithm,
     pds: &str,
 ) {
-    // TODO: allow passing in CurveAlgorithm during setup
     let pub_key = retrieve_public_key(private_key, key_alg);
 
     let pub_key = DataModel::try_from(Ipld::String(pub_key))
