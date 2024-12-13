@@ -118,6 +118,9 @@ pub enum LabelerCommands {
         /// One may be generated using the `generate-private-key` command.
         #[arg(short = 'k', long)]
         private_key: String,
+        /// ECDSA curve algorithm that was used to generate the private key
+        #[arg(value_enum, short = 'a', long = "alg", default_value_t)]
+        key_alg: CurveAlgorithm,
     },
 }
 

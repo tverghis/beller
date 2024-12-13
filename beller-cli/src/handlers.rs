@@ -37,11 +37,13 @@ pub fn labeler_commands(commands: LabelerCommands, pds: &str) {
             signing_token,
             labeler_url,
             private_key,
+            key_alg,
         } => labeler::setup(
             &access_token,
             &signing_token,
             &labeler_url,
             &private_key,
+            key_alg,
             pds,
         ),
     }
