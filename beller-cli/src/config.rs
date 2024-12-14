@@ -3,7 +3,6 @@ use std::{
     io::{self, Read},
 };
 
-use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -29,12 +28,15 @@ impl Default for PdsConfig {
 
 impl Configuration {
     pub fn from_config_file() -> Self {
-        let config_path = ProjectDirs::from("com", "beller", "beller")
-            .expect("failed to initialize ProjectDirs")
-            .config_dir()
-            .join("config.toml");
+        let config_file_path = std::env::var("BELLER_CONFIG_PATH");
 
-        match File::open(config_path) {
+        // If there's no file specified in the env var, we can skip
+        // file parsing and just return early.
+        let Ok(path) = config_file_path else {
+            return Configuration::default();
+        };
+
+        match File::open(path) {
             Ok(mut f) => {
                 let mut config = String::new();
                 f.read_to_string(&mut config)
