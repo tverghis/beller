@@ -15,9 +15,6 @@ struct PdsConfig {
     endpoint: String,
 }
 
-unsafe impl Sync for PdsConfig {}
-unsafe impl Sync for Configuration {}
-
 impl Default for PdsConfig {
     fn default() -> Self {
         Self {
