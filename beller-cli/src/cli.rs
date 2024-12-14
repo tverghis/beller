@@ -16,8 +16,8 @@ pub enum Commands {
 
         /// URL of the personal data server.
         /// This may be specified on any command, if desired.
-        #[arg(short = 's', long, default_value = "https://bsky.social")]
-        pds: String,
+        #[arg(short = 's', long)]
+        pds: Option<String>,
     },
 
     /// Cryptography-related commands.
@@ -31,8 +31,8 @@ pub enum Commands {
 
         /// URL of the personal data server.
         /// This may be specified on any command, if desired.
-        #[arg(short = 's', long, default_value = "https://bsky.social")]
-        pds: String,
+        #[arg(short = 's', long)]
+        pds: Option<String>,
     },
 }
 

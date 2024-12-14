@@ -1,22 +1,25 @@
 use crate::{
     cli::{ApiCommands, CryptoCommands, LabelerCommands},
+    config::Configuration,
     impls::{crypto, did, labeler, plc, repo, session},
 };
 
-pub fn api_commands(commands: ApiCommands, pds: &str) {
+pub fn api_commands(commands: ApiCommands, config: &Configuration) {
+    let pds = &config.pds.endpoint;
+
     match commands {
-        ApiCommands::DescribeRepo { did } => repo::describe_did(&did, pds),
-        ApiCommands::CreateSession { args } => {
-            session::create(&args, pds);
+        ApiCommands::DescribeRepo { ref did } => repo::describe_did(pds, did),
+        ApiCommands::CreateSession { ref args } => {
+            session::create(pds, args);
         }
-        ApiCommands::GetSession { access_token } => {
-            session::get(&access_token, pds);
+        ApiCommands::GetSession { ref access_token } => {
+            session::get(pds, access_token);
         }
-        ApiCommands::RequestPlcOperationSignature { access_token } => {
-            plc::request_operation_signing_token(&access_token, pds);
+        ApiCommands::RequestPlcOperationSignature { ref access_token } => {
+            plc::request_operation_signing_token(pds, access_token);
         }
-        ApiCommands::GetRecommendedDidCredentials { access_token } => {
-            did::get_recommended_credentials(&access_token, pds);
+        ApiCommands::GetRecommendedDidCredentials { ref access_token } => {
+            did::get_recommended_credentials(pds, access_token);
         }
     }
 }
@@ -30,7 +33,7 @@ pub fn crypto_commands(commands: CryptoCommands) {
     }
 }
 
-pub fn labeler_commands(commands: LabelerCommands, pds: &str) {
+pub fn labeler_commands(commands: LabelerCommands, config: &Configuration) {
     match commands {
         LabelerCommands::Setup {
             access_token,
@@ -39,12 +42,12 @@ pub fn labeler_commands(commands: LabelerCommands, pds: &str) {
             private_key,
             key_alg,
         } => labeler::setup(
+            &config.pds.endpoint,
             &access_token,
             &signing_token,
             &labeler_url,
             &private_key,
             key_alg,
-            pds,
         ),
     }
 }

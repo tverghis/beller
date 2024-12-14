@@ -5,12 +5,12 @@ use crate::impls::api::crypto::{retrieve_public_key, CurveAlgorithm};
 
 /// Sets up the DID associated with the `access_token` to be a labeler service on the PDS.
 pub fn setup(
+    pds: &str,
     access_token: &str,
     signing_token: &str,
     labeler_url: &str,
     private_key: &str,
     key_alg: CurveAlgorithm,
-    pds: &str,
 ) {
     let pub_key = retrieve_public_key(private_key, key_alg);
 
@@ -54,7 +54,7 @@ pub fn setup(
         }
     };
 
-    super::plc::submit_signed_operation(access_token, signing_token, did_creds, pds);
+    super::plc::submit_signed_operation(pds, access_token, signing_token, did_creds);
 
     eprintln!("Labeler setup complete.");
     super::repo::describe_session(access_token, pds);
