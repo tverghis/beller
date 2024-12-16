@@ -6,6 +6,7 @@ use crate::impls::defs::PdsUrl;
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Configuration {
+    #[serde(default)]
     pub pds: PdsUrl,
 }
 
