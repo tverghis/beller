@@ -3,9 +3,11 @@ use ipld_core::ipld::Ipld;
 
 use crate::impls::api::crypto::{retrieve_public_key, CurveAlgorithm};
 
+use super::defs::PdsUrl;
+
 /// Sets up the DID associated with the `access_token` to be a labeler service on the PDS.
 pub fn setup(
-    pds: &str,
+    pds: &PdsUrl,
     access_token: &str,
     signing_token: &str,
     labeler_url: &str,
@@ -17,7 +19,7 @@ pub fn setup(
     let pub_key = DataModel::try_from(Ipld::String(pub_key))
         .expect("could not construct IPLD String for pub_key");
 
-    let mut did_creds = super::api::did::get_recommended_credentials(access_token, pds);
+    let mut did_creds = super::api::did::get_recommended_credentials(pds, access_token);
     match &mut did_creds.verification_methods {
         None => {
             let map = Unknown::Object([("atproto_label".to_string(), pub_key)].into());
@@ -57,5 +59,5 @@ pub fn setup(
     super::plc::submit_signed_operation(pds, access_token, signing_token, did_creds);
 
     eprintln!("Labeler setup complete.");
-    super::repo::describe_session(access_token, pds);
+    super::repo::describe_session(pds, access_token);
 }

@@ -1,11 +1,13 @@
+use super::defs::PdsUrl;
+
 /// Prints details about the repository for `did`.
-pub fn describe_did(pds: &str, did: &str) {
-    let res = super::api::repo::describe(did, pds);
+pub fn describe_did(pds: &PdsUrl, did: &str) {
+    let res = super::api::repo::describe(pds.into(), did);
     println!("{}", serde_json::to_string_pretty(&res).unwrap());
 }
 
 /// Prints details about the repository for the `did` in the session associated with the `access_token`.
-pub fn describe_session(pds: &str, access_token: &str) {
-    let session = super::api::session::get(access_token, pds);
-    describe_did(&session.did, pds);
+pub fn describe_session(pds: &PdsUrl, access_token: &str) {
+    let session = super::api::session::get(pds, access_token);
+    describe_did(pds, &session.did);
 }

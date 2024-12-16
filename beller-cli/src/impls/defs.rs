@@ -1,7 +1,15 @@
 use std::ffi::OsString;
 
-#[derive(Debug, Clone, Eq, PartialEq)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 pub struct PdsUrl(String);
+
+impl Default for PdsUrl {
+    fn default() -> Self {
+        Self(String::from("https://bsky.social"))
+    }
+}
 
 impl From<OsString> for PdsUrl {
     fn from(value: OsString) -> Self {

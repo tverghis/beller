@@ -1,6 +1,6 @@
 use beller_lib::{session, XRPC};
 
-use crate::cli::Credentials;
+use crate::{cli::Credentials, impls::defs::PdsUrl};
 
 impl From<&Credentials> for session::Create {
     fn from(args: &Credentials) -> Self {
@@ -12,15 +12,15 @@ impl From<&Credentials> for session::Create {
 }
 
 /// Creates a new session on the PDS.
-pub fn create(args: &Credentials, pds: &str) -> <session::Create as XRPC>::Return {
+pub fn create(pds: &PdsUrl, args: &Credentials) -> <session::Create as XRPC>::Return {
     session::Create::from(args)
-        .apply(pds)
+        .apply(pds.into())
         .expect("could not create new session")
 }
 
 /// Fetches details about the current session from the PDS.
-pub fn get(access_token: &str, pds: &str) -> <session::Get as XRPC>::Return {
+pub fn get(pds: &PdsUrl, access_token: &str) -> <session::Get as XRPC>::Return {
     session::Get::new(access_token.to_string())
-        .apply(pds)
+        .apply(pds.into())
         .expect("could not get session")
 }

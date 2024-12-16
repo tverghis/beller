@@ -2,26 +2,15 @@ use std::{fs::File, io::Read};
 
 use serde::{Deserialize, Serialize};
 
+use crate::impls::defs::PdsUrl;
+
 #[derive(Debug, Default, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Configuration {
-    pub pds: Pds,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct Pds {
-    pub endpoint: String,
-}
-
-impl Default for Pds {
-    fn default() -> Self {
-        Self {
-            endpoint: "https://bsky.social".into(),
-        }
-    }
+    pub pds: PdsUrl,
 }
 
 pub enum ConfigOption {
-    PdsEndpoint(Option<String>),
+    PdsEndpoint(Option<PdsUrl>),
 }
 
 impl Configuration {
@@ -31,7 +20,7 @@ impl Configuration {
 
     pub fn apply(&mut self, option: ConfigOption) -> &mut Self {
         match option {
-            ConfigOption::PdsEndpoint(Some(endpoint)) => self.pds.endpoint = endpoint,
+            ConfigOption::PdsEndpoint(Some(endpoint)) => self.pds = endpoint,
             _ => {}
         };
 

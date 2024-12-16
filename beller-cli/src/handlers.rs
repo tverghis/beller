@@ -5,7 +5,7 @@ use crate::{
 };
 
 pub fn api_commands(commands: ApiCommands, config: &Configuration) {
-    let pds = &config.pds.endpoint;
+    let pds = &config.pds;
 
     match commands {
         ApiCommands::DescribeRepo { ref did } => repo::describe_did(pds, did),
@@ -42,7 +42,7 @@ pub fn labeler_commands(commands: LabelerCommands, config: &Configuration) {
             private_key,
             key_alg,
         } => labeler::setup(
-            &config.pds.endpoint,
+            &config.pds,
             &access_token,
             &signing_token,
             &labeler_url,

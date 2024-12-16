@@ -4,10 +4,12 @@ use atrium_api::{
 };
 use beller_lib::{identity, XRPC};
 
+use crate::impls::defs::PdsUrl;
+
 /// Requests an operation signing token to be sent to the email associated with the `access_token`.
-pub fn request_operation_signing_token(access_token: &str, pds: &str) {
+pub fn request_operation_signing_token(pds: &PdsUrl, access_token: &str) {
     identity::RequestPlcOperationSignature::new(access_token.to_string())
-        .apply(pds)
+        .apply(pds.into())
         .expect("could not request PLC operation signing token");
 }
 
@@ -16,10 +18,10 @@ pub fn request_operation_signing_token(access_token: &str, pds: &str) {
 /// TODO: this currently explicitly takes a `super::did::DidCreds` as the input data
 /// for the operation, but it should really take an `Unknown`.
 pub fn sign_operation(
+    pds: &PdsUrl,
     access_token: &str,
     signing_token: &str,
     did_creds: super::did::RecommendedCredentials,
-    pds: &str,
 ) -> <beller_lib::identity::SignPlcOperation as XRPC>::Return {
     let input = sign_plc_operation::InputData {
         also_known_as: did_creds.also_known_as,
@@ -30,14 +32,14 @@ pub fn sign_operation(
     };
 
     identity::SignPlcOperation::new(access_token.to_string(), input)
-        .apply(pds)
+        .apply(pds.into())
         .expect("could not sign PLC operation")
 }
 
 /// Submits a signed PLC `operation`.
-pub fn submit_plc_operation(access_token: &str, operation: Unknown, pds: &str) {
+pub fn submit_plc_operation(pds: &PdsUrl, access_token: &str, operation: Unknown) {
     let submit_op_input = submit_plc_operation::InputData { operation };
     identity::SubmitPlcOperation::new(access_token.to_string(), submit_op_input)
-        .apply(pds)
+        .apply(pds.into())
         .expect("could not submit PLC operation");
 }

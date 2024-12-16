@@ -1,4 +1,4 @@
-use crate::impls::crypto::CurveAlgorithm;
+use crate::impls::{crypto::CurveAlgorithm, defs::PdsUrl};
 
 #[derive(Debug, clap::Parser)]
 pub struct BellerCLI {
@@ -17,7 +17,7 @@ pub enum Commands {
         /// URL of the personal data server.
         /// This may be specified on any command, if desired.
         #[arg(short = 's', long)]
-        pds: Option<String>,
+        pds: Option<PdsUrl>,
     },
 
     /// Cryptography-related commands.
@@ -32,7 +32,7 @@ pub enum Commands {
         /// URL of the personal data server.
         /// This may be specified on any command, if desired.
         #[arg(short = 's', long)]
-        pds: Option<String>,
+        pds: Option<PdsUrl>,
     },
 }
 
