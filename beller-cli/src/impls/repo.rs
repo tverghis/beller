@@ -2,7 +2,7 @@ use super::defs::PdsUrl;
 
 /// Prints details about the repository for `did`.
 pub fn describe_did(pds: &PdsUrl, did: &str) {
-    let res = super::api::repo::describe(pds.into(), did);
+    let res = super::api::repo::describe(pds, did);
     println!("{}", serde_json::to_string_pretty(&res).unwrap());
 }
 

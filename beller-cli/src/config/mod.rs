@@ -20,6 +20,7 @@ impl Configuration {
     }
 
     pub fn apply(&mut self, option: ConfigOption) -> &mut Self {
+        #[allow(clippy::single_match)]
         match option {
             ConfigOption::PdsEndpoint(Some(endpoint)) => self.pds = endpoint,
             _ => {}
@@ -38,16 +39,14 @@ fn read_config_file() -> Configuration {
         return Configuration::default();
     };
 
-    match File::open(path) {
-        Ok(mut f) => {
-            let mut config = String::new();
-            f.read_to_string(&mut config)
-                .expect("failed to read config file");
-            toml::from_str(&config).expect("failed to parse config file")
-        }
-        _ => {
-            eprintln!("Failed to open configuration file");
-            unimplemented!();
-        }
+    if let Ok(mut f) = File::open(path) {
+        let mut config = String::new();
+        f.read_to_string(&mut config)
+            .expect("failed to read config file");
+        toml::from_str(&config).expect("failed to parse config file")
+    } else {
+        eprintln!("Failed to open configuration file");
+        // TODO: handle this error case properly
+        unimplemented!();
     }
 }

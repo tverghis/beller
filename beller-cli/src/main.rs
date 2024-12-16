@@ -14,11 +14,11 @@ fn main() {
 
     match cli.command {
         Commands::Api { commands, pds } => {
-            handlers::api_commands(commands, config.apply(ConfigOption::PdsEndpoint(pds)))
+            handlers::api_commands(&commands, config.apply(ConfigOption::PdsEndpoint(pds)));
         }
-        Commands::Crypto(commands) => handlers::crypto_commands(commands),
+        Commands::Crypto(commands) => handlers::crypto_commands(&commands),
         Commands::Labeler { commands, pds } => {
-            handlers::labeler_commands(commands, config.apply(ConfigOption::PdsEndpoint(pds)))
+            handlers::labeler_commands(&commands, config.apply(ConfigOption::PdsEndpoint(pds)));
         }
     };
 }

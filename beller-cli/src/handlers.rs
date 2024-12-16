@@ -4,7 +4,7 @@ use crate::{
     impls::{crypto, did, labeler, plc, repo, session},
 };
 
-pub fn api_commands(commands: ApiCommands, config: &Configuration) {
+pub fn api_commands(commands: &ApiCommands, config: &Configuration) {
     let pds = &config.pds;
 
     match commands {
@@ -24,16 +24,16 @@ pub fn api_commands(commands: ApiCommands, config: &Configuration) {
     }
 }
 
-pub fn crypto_commands(commands: CryptoCommands) {
+pub fn crypto_commands(commands: &CryptoCommands) {
     match commands {
-        CryptoCommands::GeneratePrivateKey { alg } => crypto::print_private_key(alg),
+        CryptoCommands::GeneratePrivateKey { alg } => crypto::print_private_key(*alg),
         CryptoCommands::RetrievePublicKey { private_key, alg } => {
-            crypto::print_public_key(&private_key, alg);
+            crypto::print_public_key(private_key, *alg);
         }
     }
 }
 
-pub fn labeler_commands(commands: LabelerCommands, config: &Configuration) {
+pub fn labeler_commands(commands: &LabelerCommands, config: &Configuration) {
     match commands {
         LabelerCommands::Setup {
             access_token,
@@ -43,11 +43,11 @@ pub fn labeler_commands(commands: LabelerCommands, config: &Configuration) {
             key_alg,
         } => labeler::setup(
             &config.pds,
-            &access_token,
-            &signing_token,
-            &labeler_url,
-            &private_key,
-            key_alg,
+            access_token,
+            signing_token,
+            labeler_url,
+            private_key,
+            *key_alg,
         ),
     }
 }
