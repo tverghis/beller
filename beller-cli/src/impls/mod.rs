@@ -5,6 +5,7 @@
 mod api;
 
 pub mod crypto;
+pub mod defs;
 pub mod did;
 pub mod labeler;
 pub mod plc;
